@@ -1,0 +1,140 @@
+import { Component, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Task } from '../shared/Task';
+import { Router } from '@angular/router';
+import { NgxFileDropEntry } from 'ngx-file-drop';
+
+@Component({
+  selector: 'app-register',
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.css']
+})
+export class RegisterComponent{
+
+  constructor(private fb: FormBuilder,private router:Router, private ref:MatDialogRef<RegisterComponent>) { }
+  // RegisterForm:FormGroup;
+  selectedFile: File;
+  integerRegex = /^\d+$/;
+  emailRegex = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$"
+  photoRegex = /^(?:(?:(?:(?:image\/(png|jpeg|jpg))|(?:application\/(x-)?png)|(?:application\/(x-)?jpeg))\/[a-z\-]+))?(?:(?:;base64,)[\w\/\+=]+)?(?:;image_height=325)?(?:;image_width=310)?$/;
+ 
+// ngOnInit(): void {
+//   this.initializeForm();
+// }
+// initializeForm(): void {
+  RegisterForm = new FormGroup({
+    // profilePhoto:new FormControl('',[Validators.required,Validators.pattern(this.photoRegex)]),
+    firstName:new FormControl('',[Validators.required,Validators.max(40)]),
+    lastName: new FormControl('',[Validators.required,Validators.max(40)]),
+    email: new FormControl('',[Validators.required, Validators.email,Validators.maxLength(40),Validators.pattern(this.emailRegex)]),
+    contact: new FormControl('',[ Validators.required,Validators.minLength(10),Validators.maxLength(10),Validators.pattern('[0-9]{10}'),Validators.pattern(this.integerRegex)]),
+    age:new FormControl(18,[Validators.required,Validators.max(60),Validators.min(18),Validators.pattern(this.integerRegex)]),
+    state:new FormControl([Validators.required]),
+    country:new FormControl ('',[Validators.required]),
+    address:new FormControl(['']),
+    tag:new FormControl([[]]),
+    subscribe:new FormControl([false]),
+    
+  });
+
+
+
+tags: string[] = [];
+  selectable = true;
+  removable = true;
+  disabled = false;
+
+  task: Task = {
+    name: 'Subscribe to newsletter',
+    
+  };
+  max = 100;
+  min = 18;
+  showTicks = false;
+  step = 1;
+  thumbLabel = false;
+  value = 18;
+ 
+  addTag(event: any): void {
+    const value = event.target.value.trim();
+    if (value && !this.tags.includes(value)) {
+      this.tags.push(value);
+    }
+    
+    event.target.value = '';
+  }
+  removeTag(tag: string): void {
+    const index = this.tags.indexOf(tag);
+    if (index !== -1) {
+      this.tags.splice(index, 1);
+    }
+  }
+
+onFileSelected(event: any): void {
+  const file = (event.target as HTMLInputElement).files?.item(0);
+  if (file) {
+    this.selectedFile = file;
+  }
+}
+onSubmit(){
+  console.log(this.RegisterForm.value)
+    // this.RegisterForm.reset()
+  }
+submit(){
+  console.log(this.RegisterForm.value)
+}
+  onCancel(){
+  }
+ 
+  public files: NgxFileDropEntry[] = [];
+
+  public dropped(files: NgxFileDropEntry[]) {
+    this.files = files;
+    for (const droppedFile of files) {
+
+      // Is it a file?
+      if (droppedFile.fileEntry.isFile) {
+        const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+        fileEntry.file((file: File) => {
+
+          // Here you can access the real file
+          console.log(droppedFile.relativePath, file);
+
+          /**
+          // You could upload it like this:
+          const formData = new FormData()
+          formData.append('logo', file, relativePath)
+
+          // Headers
+          const headers = new HttpHeaders({
+            'security-token': 'mytoken'
+          })
+
+          this.http.post('https://mybackend.com/api/upload/sanitize-and-save-logo', formData, { headers: headers, responseType: 'blob' })
+          .subscribe(data => {
+            // Sanitized logo returned from backend
+          })
+          **/
+
+        });
+      } else {
+        // It was a directory (empty directories are added, otherwise only files)
+        const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
+        console.log(droppedFile.relativePath, fileEntry);
+      }
+    }
+  }
+
+  public fileOver(event: any){
+    console.log(event);
+  }
+
+  public fileLeave(event: any){
+    console.log(event);
+  }
+  
+
+
+}
+

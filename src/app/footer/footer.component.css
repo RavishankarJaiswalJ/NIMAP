@@ -1,0 +1,33 @@
+.footer{
+    text-align: center;
+    background-color: rgb(17, 47, 54);
+    color: #fff;
+    padding: 100px 30px;
+}
+.Email{
+  width: 20%;
+  padding: 10px;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+  border-radius: 5px;
+  border: 2px solid rgb(35, 207, 247);
+}
+
+.footer-2{
+    text-align: left;
+    background-color: rgb(240, 236, 204);
+    color: #555;
+    padding: 100px 30px;
+    
+}
+
+.Email-2{
+  width: 20%;
+  padding: 5px 10px;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+  border-radius: 5px;
+  border: 2px solid rgb(35, 207, 247);
+}
